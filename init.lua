@@ -6,6 +6,9 @@ vim.g.maplocalleader = ' '
 -- Set background to dark
 vim.opt.background = 'dark'
 
+-- Set borders to the popup windows
+vim.opt.winborder = 'bold'
+
 -- Set column suggestion
 vim.opt.colorcolumn = '80'
 
@@ -739,9 +742,10 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'enter',
-        ['<tab>'] = { 'select_next', 'fallback' },
-        ['<S-tab'] = { 'select_prev', 'fallback' },
+        preset = 'none',
+        ['<C-A-enter>'] = { 'accept' },
+        ['<C-A-j>'] = { 'select_next', 'fallback' },
+        ['<C-A-k>'] = { 'select_prev', 'fallback' },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -754,6 +758,14 @@ require('lazy').setup({
       },
 
       completion = {
+        menu = {
+          draw = {
+            columns = {
+              { 'label', 'label_description', gap = 1 },
+              { 'kind_icon', 'kind' },
+            },
+          },
+        },
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
