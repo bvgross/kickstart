@@ -3,8 +3,11 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.g.mapleader = ' '
 -- Set background to dark
 vim.opt.background = 'dark'
+
+vim.opt.clipboard = 'unnamedplus'
 
 -- Set borders to the popup windows
 vim.opt.winborder = 'bold'
@@ -12,7 +15,8 @@ vim.opt.winborder = 'bold'
 -- Set column suggestion
 vim.opt.colorcolumn = '100'
 
-vim.opt.showtabline = 2
+vim.opt.showtabline = 0
+vim.opt.cmdheight = 0
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -126,6 +130,9 @@ vim.keymap.set('n', '<A-S-k>', ':t-1<CR>==')
 
 vim.keymap.set('v', '<S-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', '<S-k>', ":m '>-2<CR>gv=gv")
+
+--Yank and past from clipboard
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -771,8 +778,12 @@ require('lazy').setup({
       },
 
       sources = {
-        default = { 'buffer', 'lsp', 'path', 'snippets' },
+        default = { 'path', 'lsp', 'buffer', 'snippets' },
         providers = {
+          path = { score_offset = 4 },
+          lsp = { score_offset = 3 },
+          buffer = { score_offset = 2 },
+          snippets = { score_offset = 1 },
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
         },
       },
