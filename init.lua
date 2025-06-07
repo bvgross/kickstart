@@ -5,13 +5,12 @@ vim.g.maplocalleader = ' '
 
 vim.g.mapleader = ' '
 -- Set background to dark
-vim.opt.background = 'dark'
-
-vim.opt.clipboard = 'unnamedplus'
+-- vim.opt.background = 'dark'
 
 -- Set borders to the popup windows
-vim.opt.winborder = 'bold'
+vim.opt.winborder = 'rounded'
 
+vim.opt.smartindent = true
 -- Set column suggestion
 vim.opt.colorcolumn = '100'
 
@@ -40,9 +39,9 @@ vim.opt.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
--- vim.schedule(function()
---   vim.opt.clipboard = 'unnamedplus'
--- end)
+vim.schedule(function()
+  vim.opt.clipboard = 'unnamedplus'
+end)
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -86,6 +85,8 @@ vim.opt.scrolloff = 10
 -- See `:help 'confirm'`
 vim.opt.confirm = true
 
+-- Changing the tabline color
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -123,8 +124,8 @@ vim.keymap.set('n', '<C-A-k>', '<C-w><C-k>', { desc = 'Move focus to the upper w
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
 -- NOTE: My keymaps
-vim.keymap.set('n', '<S-k>', ':m-2<CR>==')
-vim.keymap.set('n', '<S-j>', ':m+1<CR>==')
+-- vim.keymap.set('n', '<S-k>', ':m-2<CR>==')
+-- vim.keymap.set('n', '<S-j>', ':m+1<CR>==')
 vim.keymap.set('n', '<A-S-j>', ':t.<CR>==')
 vim.keymap.set('n', '<A-S-k>', ':t-1<CR>==')
 
@@ -170,6 +171,7 @@ vim.opt.rtp:prepend(lazypath)
 --    :Lazy update
 --
 -- NOTE: Here is where you install your plugins.
+
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
@@ -406,6 +408,53 @@ require('lazy').setup({
       'saghen/blink.cmp',
     },
     config = function()
+      local jdtls_path = vim.fn.stdpath 'data' .. '/mason/packages/jdtls'
+
+      local jdtls = require 'jdtls'
+
+      local function setup_jdtls()
+        local root_markers = { '.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle' }
+        local root_dir = require('jdtls.setup').find_root(root_markers)
+
+        if root_dir == nil then
+          return
+        end
+
+        local workspace_dir = vim.fn.stdpath 'cache' .. '/jdtls/workspace/' .. vim.fn.fnamemodify(root_dir, ':p:h:t')
+
+        local config = {
+          cmd = {
+            '/usr/lib/jvm/java-21-openjdk-amd64/bin/java',
+            '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+            '-Dosgi.bundles.defaultStartLevel=4',
+            '-Declipse.product=org.eclipse.jdt.ls.core.product',
+            '-Dlog.level=ALL',
+            '-noverify',
+            '-Xmx1G',
+            '-jar',
+            vim.fn.glob(jdtls_path .. '/plugins/org.eclipse.equinox.launcher_*.jar'),
+            '-configuration',
+            jdtls_path .. '/config_linux',
+            '-data',
+            workspace_dir,
+          },
+          root_dir = root_dir,
+          settings = {
+            java = {},
+          },
+          init_options = {
+            bundles = {},
+          },
+        }
+
+        jdtls.start_or_attach(config)
+      end
+
+      -- Auto-start jdtls for Java files
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'java',
+        callback = setup_jdtls,
+      })
       -- Brief aside: **What is LSP?**
       --
       -- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -715,6 +764,8 @@ require('lazy').setup({
           {
             'rafamadriz/friendly-snippets',
             config = function()
+              local luasnip = require 'luasnip'
+              luasnip.filetype_extend('javascriptreact', { 'html' })
               require('luasnip.loaders.from_vscode').lazy_load()
             end,
           },
@@ -780,11 +831,11 @@ require('lazy').setup({
       sources = {
         default = { 'path', 'lsp', 'buffer', 'snippets' },
         providers = {
-          path = { score_offset = 4 },
-          lsp = { score_offset = 3 },
-          buffer = { score_offset = 2 },
-          snippets = { score_offset = 1 },
-          lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+          path = { score_offset = 5, min_keyword_length = 2 },
+          lsp = { score_offset = 4 },
+          buffer = { score_offset = 3 },
+          snippets = { score_offset = 2 },
+          lazydev = { module = 'lazydev.integrations.blink', score_offset = 1 },
         },
       },
 
@@ -822,7 +873,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'gruvbox'
+      vim.cmd.colorscheme 'kanagawa'
     end,
   },
 
@@ -882,7 +933,7 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = false, disable = { 'ruby' } },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:

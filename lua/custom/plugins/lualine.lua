@@ -4,29 +4,29 @@ return {
   config = function()
     -- Color table for highlights
     local colors = {
-      bg       = '#101521',
-      fg       = '#bbc2cf',
-      yellow   = '#ECBE7B',
-      cyan     = '#008080',
-      darkblue = '#081633',
-      green    = '#98be65',
-      orange   = '#FF8800',
-      violet   = '#a9a1e1',
-      magenta  = '#c678dd',
-      blue     = '#51afef',
-      red      = '#ec5f67',
+      bg = '#1f1f28',
+      fg = '#dcd7ba',
+      yellow = '#FF9E3B',
+      cyan = '#A3D4D5',
+      darkblue = '#7E9CD8',
+      green = '#98BB6C',
+      orange = '#FF9E3B',
+      violet = '#957FB8',
+      magenta = '#D27E99',
+      blue = '#658594',
+      red = '#C34043',
     }
 
     -- Custom conditions
     local conditions = {
       buffer_not_empty = function()
-        return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
+        return vim.fn.empty(vim.fn.expand '%:t') ~= 1
       end,
       hide_in_width = function()
         return vim.fn.winwidth(0) > 80
       end,
       check_git_workspace = function()
-        local filepath = vim.fn.expand('%:p:h')
+        local filepath = vim.fn.expand '%:p:h'
         local gitdir = vim.fn.finddir('.git', filepath .. ';')
         return gitdir and #gitdir > 0 and #gitdir < #filepath
       end,
@@ -70,7 +70,9 @@ return {
     end
 
     ins_left {
-      function() return '▊' end,
+      function()
+        return '▊'
+      end,
       color = function()
         local mode_color = {
           n = colors.red,
@@ -125,7 +127,9 @@ return {
         local msg = 'No Active Lsp'
         local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
         local clients = vim.lsp.get_clients()
-        if next(clients) == nil then return msg end
+        if next(clients) == nil then
+          return msg
+        end
         for _, client in ipairs(clients) do
           local filetypes = client.config.filetypes
           if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
@@ -144,7 +148,9 @@ return {
     ins_right { 'location' }
     ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }
     ins_right {
-      function() return '▊' end,
+      function()
+        return '▊'
+      end,
       color = function()
         local mode_color = {
           n = colors.red,
@@ -175,5 +181,5 @@ return {
 
     -- Initialize lualine
     require('lualine').setup(config)
-  end
+  end,
 }

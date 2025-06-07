@@ -12,11 +12,28 @@ return {
   {
     'ellisonleao/gruvbox.nvim',
     priority = 1000,
-    config = true,
     opts = ...,
     config = function(plugin, opts)
       require('gruvbox').setup {
         contrast = 'hard',
+      }
+    end,
+  },
+  {
+    'rebelot/kanagawa.nvim',
+    priority = 1000,
+    config = function(plugin, opts)
+      require('kanagawa').setup {
+        theme = 'wave',
+        colors = {
+          theme = {
+            all = {
+              ui = {
+                bg_gutter = 'none',
+              },
+            },
+          },
+        },
       }
     end,
   },
