@@ -24,10 +24,12 @@ return {
         allowRenameOfImportPath = true,
       },
       expose_as_cpde_action = { 'all' },
-      code_lens = 'all',
       jsx_close_tag = {
         enable = true,
         filetypes = { 'javascriptreact', 'typescriptreact' },
+      },
+      tsserver_plugins = {
+        '@styled/typescript-styled-plugin',
       },
     },
   },
