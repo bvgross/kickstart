@@ -163,6 +163,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.keymap.set('i', '<C-A-Space>', function()
+  require('blink.cmp').show()
+end, { desc = 'Trigger completion manually' })
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -708,6 +712,23 @@ require('lazy').setup({
             },
           },
         },
+        cssls = {
+          filetypes = { 'css', 'scss', 'less' }, -- don’t let it attach to Tailwind projects
+        },
+        tailwindcss = {
+          filetypes = {
+            'html',
+            'css', -- keep css here so globals.css gets Tailwind features
+            'scss',
+            'javascript',
+            'typescript',
+            'javascriptreact',
+            'typescriptreact',
+            'svelte',
+            'vue',
+          },
+          root_dir = require('lspconfig').util.root_pattern('tailwind.config.js', 'tailwind.config.ts', 'postcss.config.js', 'globals.css', '.git'),
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -778,6 +799,13 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        astro = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        json = { 'prettierd' },
+        typescript = { 'prettierd' },
+        html = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        javascript = { 'prettierd' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -882,10 +910,10 @@ require('lazy').setup({
       sources = {
         default = { 'path', 'lsp', 'buffer', 'snippets' },
         providers = {
-          path = { score_offset = 50, fallbacks = { 'snippets', 'buffer' } },
-          lsp = { score_offset = 40, min_keyword_length = 2 },
+          path = { score_offset = 40 },
+          lsp = { score_offset = 1000 },
           buffer = { score_offset = 20 },
-          snippets = { score_offset = 30 },
+          snippets = { score_offset = 30, max_items = 3 },
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 1 },
         },
       },
