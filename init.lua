@@ -128,24 +128,33 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-M-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-M-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-M-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-M-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- vim.keymap.set('n', '<C-M-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+-- vim.keymap.set('n', '<C-M-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+-- vim.keymap.set('n', '<C-M-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+-- vim.keymap.set('n', '<C-M-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+if vim.fn.has 'mac' == 1 then
+  vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move focus to the left window' })
+  vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move focus to the left window' })
+  vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move focus to the left window' })
+  vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move focus to the left window' })
+else
+  vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move focus to the left window' })
+  vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move focus to the left window' })
+  vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move focus to the left window' })
+  vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move focus to the left window' })
+end
 
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
--- NOTE: My keymaps
--- vim.keymap.set('n', '<S-k>', ':m-2<CR>==')
--- vim.keymap.set('n', '<S-j>', ':m+1<CR>==')
-vim.keymap.set('n', '<M-S-j>', ':t.<CR>==')
-vim.keymap.set('n', '<M-S-k>', ':t-1<CR>==')
+vim.keymap.set('n', '<M-Down>', ':m .+1<CR>==', { desc = 'Move line down' })
+vim.keymap.set('n', '<M-Up>', ':m .-2<CR>==', { desc = 'Move line up' })
 
-vim.keymap.set('v', '<S-j>', ":m '>+1<CR>gv=gv")
-vim.keymap.set('v', '<S-k>', ":m '>-2<CR>gv=gv")
+-- vim.keymap.set('v', '<S-j>', ":m '>+1<CR>gv=gv")
+-- vim.keymap.set('v', '<S-k>', ":m '>-2<CR>gv=gv")
 
 --Yank and past from clipboard
 
@@ -163,9 +172,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-vim.keymap.set('i', '<C-M-Space>', function()
-  require('blink.cmp').show()
-end, { desc = 'Trigger completion manually' })
+-- vim.keymap.set('i', '<C-M-Space>', function()
+--   require('blink.cmp').show()
+-- end, { desc = 'Trigger completion manually' })
+
+local map = vim.keymap.set
+
+if vim.fn.has 'mac' == 1 then
+  map('i', '<D-Space>', function()
+    require('blink.cmp').show()
+  end, { desc = 'Trigger completion manually' })
+else
+  map('i', '<M-Space>', function()
+    require('blink.cmp').show()
+  end, { desc = 'Trigger completion manually' })
+end
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
