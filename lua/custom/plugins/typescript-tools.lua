@@ -14,7 +14,7 @@ return {
         placeOpenBraceOnNewLineForControlBlocks = false,
       },
       tsserver_file_preferences = {
-        quotePreference = 'single',
+        quotePreference = 'double',
         importModuleSpecifierPreference = 'non-relative',
         importModuleSpecifierEnding = 'minimal',
         includePackageJsonAutoImports = 'on',

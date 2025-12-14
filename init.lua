@@ -128,10 +128,10 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-A-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-A-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-A-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-A-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<C-M-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-M-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-M-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-M-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -141,8 +141,8 @@ vim.keymap.set('n', '<C-A-k>', '<C-w><C-k>', { desc = 'Move focus to the upper w
 -- NOTE: My keymaps
 -- vim.keymap.set('n', '<S-k>', ':m-2<CR>==')
 -- vim.keymap.set('n', '<S-j>', ':m+1<CR>==')
-vim.keymap.set('n', '<A-S-j>', ':t.<CR>==')
-vim.keymap.set('n', '<A-S-k>', ':t-1<CR>==')
+vim.keymap.set('n', '<M-S-j>', ':t.<CR>==')
+vim.keymap.set('n', '<M-S-k>', ':t-1<CR>==')
 
 vim.keymap.set('v', '<S-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', '<S-k>', ":m '>-2<CR>gv=gv")
@@ -162,6 +162,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+vim.keymap.set('i', '<C-M-Space>', function()
+  require('blink.cmp').show()
+end, { desc = 'Trigger completion manually' })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -708,6 +712,23 @@ require('lazy').setup({
             },
           },
         },
+        cssls = {
+          filetypes = { 'css', 'scss', 'less' }, -- don’t let it attach to Tailwind projects
+        },
+        tailwindcss = {
+          filetypes = {
+            'html',
+            'css', -- keep css here so globals.css gets Tailwind features
+            'scss',
+            'javascript',
+            'typescript',
+            'javascriptreact',
+            'typescriptreact',
+            'svelte',
+            'vue',
+          },
+          root_dir = require('lspconfig').util.root_pattern('tailwind.config.js', 'tailwind.config.ts', 'postcss.config.js', 'globals.css', '.git'),
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -778,6 +799,13 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        astro = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        json = { 'prettierd' },
+        typescript = { 'prettierd' },
+        html = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        javascript = { 'prettierd' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -848,9 +876,9 @@ require('lazy').setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'none',
-        ['<A-l>'] = { 'accept' },
-        ['<A-j>'] = { 'select_next', 'fallback' },
-        ['<A-k>'] = { 'select_prev', 'fallback' },
+        ['<M-l>'] = { 'accept' },
+        ['<M-j>'] = { 'select_next', 'fallback' },
+        ['<M-k>'] = { 'select_prev', 'fallback' },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -882,10 +910,10 @@ require('lazy').setup({
       sources = {
         default = { 'path', 'lsp', 'buffer', 'snippets' },
         providers = {
-          path = { score_offset = 50, fallbacks = { 'snippets', 'buffer' } },
-          lsp = { score_offset = 40, min_keyword_length = 2 },
+          path = { score_offset = 40 },
+          lsp = { score_offset = 1000 },
           buffer = { score_offset = 20 },
-          snippets = { score_offset = 30 },
+          snippets = { score_offset = 30, max_items = 3 },
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 1 },
         },
       },
