@@ -128,10 +128,10 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-A-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-A-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-A-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-A-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<C-M-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-M-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-M-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-M-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -141,8 +141,8 @@ vim.keymap.set('n', '<C-A-k>', '<C-w><C-k>', { desc = 'Move focus to the upper w
 -- NOTE: My keymaps
 -- vim.keymap.set('n', '<S-k>', ':m-2<CR>==')
 -- vim.keymap.set('n', '<S-j>', ':m+1<CR>==')
-vim.keymap.set('n', '<A-S-j>', ':t.<CR>==')
-vim.keymap.set('n', '<A-S-k>', ':t-1<CR>==')
+vim.keymap.set('n', '<M-S-j>', ':t.<CR>==')
+vim.keymap.set('n', '<M-S-k>', ':t-1<CR>==')
 
 vim.keymap.set('v', '<S-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', '<S-k>', ":m '>-2<CR>gv=gv")
@@ -163,7 +163,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-vim.keymap.set('i', '<C-A-Space>', function()
+vim.keymap.set('i', '<C-M-Space>', function()
   require('blink.cmp').show()
 end, { desc = 'Trigger completion manually' })
 
@@ -876,9 +876,9 @@ require('lazy').setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'none',
-        ['<A-l>'] = { 'accept' },
-        ['<A-j>'] = { 'select_next', 'fallback' },
-        ['<A-k>'] = { 'select_prev', 'fallback' },
+        ['<M-l>'] = { 'accept' },
+        ['<M-j>'] = { 'select_next', 'fallback' },
+        ['<M-k>'] = { 'select_prev', 'fallback' },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
